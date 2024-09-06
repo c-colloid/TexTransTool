@@ -146,15 +146,13 @@ namespace net.rs64.TexTransTool.NDMF
         public async Task<IRenderFilterNode> Instantiate(RenderGroup group, IEnumerable<(Renderer, Renderer)> proxyPairs, ComputeContext context)
         {
             var sortedBehaviors = group.GetData<SortedList<int, TexTransBehavior>>().Select(i => i.Value).ToArray();
-
             await Task.Delay(0);
 
-            var node = new TexTransPhaseNode();
-            node.TargetPhase = PreviewTargetPhase;
+            var node = new TexTransPhaseNode(sortedBehaviors, PreviewTargetPhase);
             var timer = System.Diagnostics.Stopwatch.StartNew();
 
             Profiler.BeginSample("node.NodeExecuteAndInit");
-            node.NodeExecuteAndInit(sortedBehaviors, proxyPairs, context);
+            node.NodeExecuteAndInit(proxyPairs, context);
             Profiler.EndSample();
 
             timer.Stop();
